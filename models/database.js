@@ -14,15 +14,24 @@ Database.prototype.checkUser = function(user) {
     });
 };
 
-// user: { psid }
+Database.prototype.getUserToken = function(psid) {
+    return this.db.oneOrNone("SELECT token FROM users WHERE psid=$1", psid);
+}
+
 Database.prototype.insertUser = function(user) {
-    return this.db.none("INSERT INTO users(psid) VALUES (${psid});", user);
+    return this.db.oneOrNone('SELECT token FROM users WHERE psid=${psid}', user)
+    .then(token => {
+        if(token === null) {
+            return this.db.none("INSERT INTO users(psid, token) VALUES (${psid}, ${token});", user);
+        } else {
+            return this.db.none("UPDATE users SET token=${token} WHERE psid=${psid};", user);
+        }
+    });
 };
+
 
 Database.prototype.deleteUser = function(user) {
     return this.db.none("DELETE FROM public.users WHERE psid=${psid}", user);
 };
 
-Database.prototype.getUser
-
-Database.prototype.isUserTaken = function(user) {}
+module.exports = Database;
