@@ -4,6 +4,9 @@ const request = require('request');
 const express = require('express');
 const router = express.Router();
 
+var Database = require('../models/database');
+var db = new Database();
+
 // for facebook verification
 router.get('/', function (req, res) {
 	if (req.query['hub.verify_token'] === process.env.VERIFY_TOKEN) {
@@ -21,24 +24,33 @@ router.post('/', function (req, res) {
 		let sender = event.sender.id;
 		console.log(event);
 		console.log(sender);
-		if (event.message && event.message.text) {
-			let text = event.message.text;
-			sendLoginRequestMessage(sender, "Text received, echo: " + text.substring(0, 200));
-		}
-		if (event.postback) {
-			let text = JSON.stringify(event.postback);
-			sendTextMessage(sender, "Postback received: " + text.substring(0, 200));
-			continue;
-		}
+		db.checkUser(sender, found => {
+			if(found) {
+				if (event.message && event.message.text) {
+					db.getUserMatch(sender).then(match => {
+						if(match != undefined) {
+							sendTextMessage(match, event.message.text)
+						} else {
+							sendTextMessage(sender, "Select \"Actions\" -> \"Find match\" from menu");
+						}
+					});
+				}
+				if (event.postback) {
+					if(event.postback.payload == "FIND_MATCH") {
+						// TODO
+					} else if(event.postback.payload == "ABANDON") {
+						// TODO
+					}
+				}
+			} else {
+				sendLoginRequestMessage(sender);
+			}
+		});
 	}
 	res.sendStatus(200);
 })
 
-function sendLoginRequestMessage(sender, text) {
-	console.log("Sending login request message: " + text);
-
-	let messageData = { text: text };
-	
+function sendLoginRequestMessage(sender, text) {	
 	request({
 		url: 'https://graph.facebook.com/v3.0/me/messages',
 		qs: { access_token: process.env.PAGE_MSG_TOKEN },
@@ -73,8 +85,7 @@ function sendLoginRequestMessage(sender, text) {
 					}
 				}
 			}
-		  }
-		  
+		}
 		  
 	}, function(error, response, body) {
 		if (error) {

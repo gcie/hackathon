@@ -15,14 +15,18 @@ var Database = function() {
     return this;
 };
 
-Database.prototype.checkUser = function(user) {
+Database.prototype.checkUser = function(psid) {
     return new Promise(function(res, rej) {
-        this.db.oneOrNone('SELECT id FROM public.users WHERE email=${email}', user)
-        .then(function(id) {
-            res(id !== null);
+        this.db.oneOrNone('SELECT token FROM users WHERE psid=$1', psid)
+        .then(function(token) {
+            res(token !== null);
         }, rej);
     });
 };
+
+Database.prototype.getUserMatch = function(psid) {
+    return this.db.oneOrNone("SELECT int_psid FROM users WHERE psid=$1", psid);
+}
 
 Database.prototype.getUserToken = function(psid) {
     return this.db.oneOrNone("SELECT token FROM users WHERE psid=$1", psid);

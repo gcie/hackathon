@@ -246,7 +246,7 @@ function pairUser(user_psid) {
 		db.getUserToken(user_psid).then(user_token => {
 			getUserFields(user_token.token, fields).then(user_data => {
 				getAllUsers().then(users => {
-					max = 0;
+					max = -1;
 					maxSimiliarities = {};
 					maxUser = {};
 					for (var user of users) {
