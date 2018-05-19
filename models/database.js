@@ -1,7 +1,17 @@
 var pgp = require('pg-promise')();
 
 var Database = function() {
-    this.db = pgp(process.env.DATABASE_URL);
+    var cn = process.env.DATABASE_URL;
+    if(cn == undefined) {
+        cn = {
+            host: 'localhost',
+            port: 5432,
+            database: 'postgres',
+            user: 'gucci',
+            password: 'gucci'
+        };
+    }
+    this.db = pgp(cn);
     return this;
 };
 

@@ -56,6 +56,7 @@ function sendLoginRequestMessage(sender, text) {
 							{
 								"title":"Welcome to Match!",
 								"subtitle":"We have the right someone for everyone.",
+								"image_url":"https://i.imgur.com/ts6E8AS.jpg",
 								"default_action": {
 									"type": "web_url",
 									"url": "https://hackathon-gucci.herokuapp.com?psid=" + sender,
