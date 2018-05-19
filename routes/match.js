@@ -4,6 +4,12 @@ var request = require('request');
 
 var testUserToken = 'EAACEdEose0cBAHNUGZBlBFoDRQAwkQAyK1BkmdLYcZAjG18iSAeehpWNDtF8e410kOAwT9kQ3Cg8xZCjyZC1x9XR6LYPpJJkxvwiMwsONb42PMtbXf3QfiAesO0fVrQFEvp7TblmLTMUJp3HfknJl04K50Fcxyib0eIwRsvSMC8cPorrNOSmpDqzMPS3J2LfzFc9wzUByQZDZD';
 
+
+function f(x, y)
+{
+    return 42;
+}
+
 function getUserFields(userToken, field, next) {
 	return new Promise((res, rej) => {
 		request({
@@ -53,7 +59,7 @@ router.get('/', function(req, res, next) {
 		var television = await getUserFields(testUserToken, 'television');
 		
 		console.log(location);
-		res.render('match', {appId : process.env.APPLICATION_ID, msg : "Wiadomość"});    		
+		res.render('match', {appId : process.env.APPLICATION_ID, msg : String("Wiadomość", "xd")});    		
 	})();
 });
 
