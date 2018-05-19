@@ -6,6 +6,7 @@ var Database = function() {
 };
 
 
+
 Database.prototype.checkUser = function(user) {
     return new Promise(function(res, rej) {
         this.db.oneOrNone('SELECT id FROM public.users WHERE email=${email}', user)
