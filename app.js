@@ -10,6 +10,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var webhook = require('./routes/webhook.js');
 var match = require('./routes/match.js');
+var oauth = require('./routes/oauth.js');
 
 var app = express();
 
@@ -31,6 +32,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/webhook', webhook);
 app.use('/match', match);
+app.use('/oauth', oauth);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
