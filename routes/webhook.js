@@ -30,7 +30,7 @@ router.post('/', function (req, res) {
 			continue;
 		}
 	}
-	res.sendStatus(200)
+	res.sendStatus(200);
 })
 
 
@@ -54,6 +54,7 @@ function sendTextMessage(sender, text) {
 		} else if (response.body.error) {
 			console.log('Error: ', response.body.error);
 		}
+		console.log(body);
 	});
 }
 
