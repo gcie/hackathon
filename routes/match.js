@@ -4,7 +4,7 @@ var request = require('request');
 var Database = require('../models/database')
 var db = new Database();
 
-var testUserToken = 'EAACEdEose0cBANPlm2bPsQkhxZAUBjfb3NYQYnQCvAwo0k8Sl6BL2uMqVwaOFARHTIUh0N38kwRNevrz5O9rUVvK9Bax4JGiPneh0CCu64TWrvxHwGYBhok1TFcG80GtbXILOml60lYbDxxSC8ReQ23hiML195kCOVrPICe4RiVRQlm54bPEzIfYkVLMx9ZAcg4U0blAZDZD';
+var testUserToken = 'EAACEdEose0cBAEMZCUJYnqr1tZCNKGJQGAZAdQ5mNlEUZBYZB1Ma9FUur6pMDIGiAZA1NNFamHQyJ1hgKSwz9fMykQ0AS9KTLRIQ8atWvNHDptHc3ZAZCYvJOZCAisi2CPyY1PqZCsp3DAF6tXvWRyU5pZAkshYbgDQwvyOOR0MsgSGIj78EZCZCwyocntPPFAR0TKYEZD';
 
 function getAllUsers() {
 	return db.getUsers();
