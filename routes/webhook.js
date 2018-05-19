@@ -54,8 +54,8 @@ function sendLoginRequestMessage(sender, text) {
 						"template_type":"generic",
 						"elements":[
 							{
-								"title":"Welcome!",
-								"subtitle":"We have the right hat for everyone.",
+								"title":"Welcome to Match!",
+								"subtitle":"We have the right someone for everyone.",
 								"default_action": {
 									"type": "web_url",
 									"url": "https://hackathon-gucci.herokuapp.com?psid=" + sender,
@@ -66,11 +66,7 @@ function sendLoginRequestMessage(sender, text) {
 										"type":"web_url",
 										"url":"https://hackathon-gucci.herokuapp.com?psid=" + sender,
 										"title":"Login"
-									},{
-										"type":"postback",
-										"title":"Login",
-										"payload":"DEVELOPER_DEFINED_PAYLOAD"
-								} ]      
+									}]      
 							}
 						]
 					}
