@@ -27,9 +27,11 @@ router.post('/', function (req, res) {
 			if(found) {
 				if (event.message && event.message.text) {
 					db.getUserMatch(sender).then(match => {
-						if(match != undefined) {
-							sendTextMessage(match, event.message.text)
+						if(match != null) {
+							console.log("SENDING TO MATCH: " + event.message.text);
+							sendTextMessage(match, event.message.text);
 						} else {
+							console.log("SENDING TO SENDER");
 							sendTextMessage(sender, "Select \"Actions\" -> \"Find match\" from menu");
 						}
 					});
