@@ -26,46 +26,42 @@ var Database = (function() {
 
     return {
         get: get,
-        checkUser: function(psid) {
+        checkUser: function(psid, next) {
             get();
-            return new Promise(function(res, rej) {
-                db.oneOrNone('SELECT token FROM users WHERE psid=$1', psid)
-                .then(function(token) {
-                    res(token !== null);
-                }, rej);
+            db.oneOrNone('SELECT token FROM users WHERE psid=$1', psid)
+            .then(function(token) {
+                next(token !== null);
             });
         },
-        getUserMatch: function(psid) {
+        getUserMatch: function(psid, next) {
             get();
-            return db.oneOrNone("SELECT int_psid FROM users WHERE psid=$1", psid);
+            db.oneOrNone("SELECT int_psid FROM users WHERE psid=$1", psid).then(data => next(data.int_psid));
         },
-        getUserToken: function(psid) {
+        getUserToken: function(psid, next) {
             get();
-            return db.oneOrNone("SELECT token FROM users WHERE psid=$1", psid);
+            db.oneOrNone("SELECT token FROM users WHERE psid=$1", psid).then(data => next(data.token));
         },
-        getUsers: function() {
+        getUsers: function(next) {
             get();
-            return db.any("SELECT psid, token, int_psid FROM users");
+            db.any("SELECT psid, token, int_psid FROM users").then(data => next(data));
         },
-        insertUser: function(user) {
+        insertUser: function(user, next) {
             get();
-            return db.oneOrNone('SELECT token FROM users WHERE psid=${psid}', user)
+            db.oneOrNone('SELECT token FROM users WHERE psid=${psid}', user)
             .then(token => {
                 if(token === null) {
                     return db.none("INSERT INTO users(psid, token) VALUES (${psid}, ${token});", user);
                 } else {
                     return db.none("UPDATE users SET token=${token} WHERE psid=${psid};", user);
                 }
-            });
+            }).then(next);
         },
-        deleteUser: function(user) {
+        deleteUser: function(user, next) {
             get();
-            return db.none("DELETE FROM public.users WHERE psid=${psid}", user);
+            db.none("DELETE FROM users WHERE psid=${psid}", user).then(next);
         }
     }
 })();
-
-
 
 /*
 Database.prototype.checkUser = function(psid) {
