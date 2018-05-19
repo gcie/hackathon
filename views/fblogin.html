@@ -75,7 +75,8 @@
     console.log('Welcome!  Fetching your information.... ');
     FB.api('/me', function(response) {
       document.getElementById('status').innerHTML =
-        'Thanks for logging in, ' + response + '!';
+        'Thanks for logging in, ' + response.name + '!';
+        console.log(response);
     });
   }
 </script>
@@ -86,7 +87,7 @@
   the FB.login() function when clicked.
 -->
 
-<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+<fb:login-button scope="public_profile,email,friends" onlogin="checkLoginState();">
 </fb:login-button>
 
 <div id="status">
