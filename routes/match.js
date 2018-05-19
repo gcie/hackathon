@@ -4,7 +4,8 @@ var request = require('request');
 var Database = require('../models/database')
 var db = new Database();
 
-var testUserToken = 'EAACEdEose0cBAEMZCUJYnqr1tZCNKGJQGAZAdQ5mNlEUZBYZB1Ma9FUur6pMDIGiAZA1NNFamHQyJ1hgKSwz9fMykQ0AS9KTLRIQ8atWvNHDptHc3ZAZCYvJOZCAisi2CPyY1PqZCsp3DAF6tXvWRyU5pZAkshYbgDQwvyOOR0MsgSGIj78EZCZCwyocntPPFAR0TKYEZD';
+var fields = 'address,age_range,birthday,education,favorite_athletes,favorite_teams,gender,hometown,languages,link,location,quotes,sports,books,friends,events,games,likes,movies,music,television';
+var testUserToken = 'Konrad';
 
 function getAllUsers() {
 	return db.getUsers();
@@ -93,10 +94,10 @@ function findOptimalUser(userToPair) {
 	return maximumUser;
 }
 
-function compareUsers(user1, user2) {
+/*function compareUsers(user1, user2) {
 	var similarity = 0
     var similarities = {}
-	for (var key in user1) {
+	for (var key of user1) {
 		var weight = Math.floor(Math.random() * 5 + 1);
 		try {
 			var arr1 = user1[key].data.sort();
@@ -138,6 +139,83 @@ function compareUsers(user1, user2) {
 		similarity: similarity, 
 		similarities: JSON.stringify(similarities)
 	};
+}*/
+
+function compareUsers(user1, user2) {
+	var similarity = 0
+    var similarities = {}
+	for (var key in user1) {
+		var weight = Math.floor(Math.random() * 5 + 1);
+		try {
+            console.log(key)
+			var arr1 = user1[key].data.sort(function (a, b){return a.name < b.name});
+			var arr2 = user2[key].data.sort(function (a, b){return a.name < b.name});
+           // console.log(user2[key].paging);             
+		}catch(exception) {
+            //console.log(key)
+           // console.log(exception)
+            if(user2[key] == undefined)
+                continue;
+            
+            if(user1[key] instanceof Array && user2[key] instanceof Array) {
+                var arr1 = user1[key].sort(function (a, b){return a.name < b.name});
+                var arr2 = user2[key].sort(function (a, b){return a.name < b.name});
+            }
+            else if (key === "age_range")
+                console.log("age");
+            else if(key === "birthday")
+                console.log("bday");
+            else if(user1[key].hasOwnProperty('name'))
+                if (user1[key].name == user2[key].name) {
+                    similarity += weight;
+                    similarities[key] = [user2[key].name];
+                }
+            else
+                if (user1[key] == user2[key]) {
+                    similarity += weight;
+                    similarities[key] = [user2[key]];
+                }
+            /*
+			if (user1[key].name == user2[key].name) {
+				similarity += weight;
+                similarities[key] = [user2[key]];
+			}*/
+            
+            if(!(user1[key] instanceof Array && user2[key] instanceof Array))
+                continue;
+		}
+        
+        var matching = []
+
+		var l = 0;
+		var r = 0;
+		var count = 0;
+		for (; l < arr1.length && r < arr2.length;) {
+            //console.log(arr1[l])
+			if (arr1[l].name == arr2[r].name) {
+				count++;
+			
+                matching.push(arr2[r].name);
+                l++; r++;
+			}
+			else if (arr1[l].name < arr2[r].name) {
+				l++;
+			}
+			else if (arr1[l].name > arr2[r].name) {
+				r++;
+			}
+		}
+        
+        if(matching.length > 0)
+            similarities[key] = matching
+
+		similarity = similarity + (count * weight);
+	}
+   
+	return {
+		similarity: similarity, 
+		similarities: JSON.stringify(similarities)
+	};
 }
 
 function getUserFields(userToken, field, next) {
@@ -157,7 +235,7 @@ function getUserFields(userToken, field, next) {
 				console.log('Error: ', response.body.error);
 				rej(error);
 			}
-			res(body);
+			res(JSON.parse(body));
 		});
 	})
 	
@@ -165,34 +243,45 @@ function getUserFields(userToken, field, next) {
 
 function pairUser(user_psid) {
 	return new Promise((res, rej) => {
-		getAllUsers().then(users => {
-			max = 0;
-			maxSimiliarities = {};
-			maxUser = {};
-			for (var user in users) {
-				if (user.psid == user_psid) continue;
+		db.getUserToken(user_psid).then(user_token => {
+			getUserFields(user_token.token, fields).then(user_data => {
+				getAllUsers().then(users => {
+					max = 0;
+					maxSimiliarities = {};
+					maxUser = {};
+					for (var user of users) {
+						if (user.psid == user_psid) continue;
+						getUserFields(user.token, fields).then(userData2 => {
+							var sim = compareUsers(user_data, userData2);
+							if (sim.similarity > max) {
+								max = sim.similarity;
+								maxSimiliarities = sim.similarities;
+								maxUser = user;
+							}
+						});
+					}		
 		
-				var sim = compareUsers(user_psid, user.psid);
-				if (sim.similarity > max) {
-					max = sim.similarity;
-					maxSimiliarities = sim.similarities;
-					maxUser = user;
-				}
-			}		
-
-			res(maxUser.psid, maxSimiliarities);
-		}).err(msg => {
-			rej(msg);
+					res(maxUser.psid, maxSimiliarities);
+				});
+			})
 		})
 	})
+
+	
 }
+
+var User = require('../models/user');
+db.insertUser(User('102', 'EAACEdEose0cBAPK4oeabJZC0QgwnzxHQwxA8Kd4p1UEGUB0SLfpqU0YWm9V6JWSSXYR2ZA80EvuBvg54vcEYRZCgvxhhVOzWscCOvHI0o4qagLOEYlavijAudBIAOCxrxZBDZCaH9rXHl5RtWJFk4pxmNHZAL2YjE0f2q8hNKEMMZAme2PjIWGus7z9meufrErgWhAJEk7XNwZDZD'))
+db.insertUser(User('Konrad', 'EAACEdEose0cBAEMZCUJYnqr1tZCNKGJQGAZAdQ5mNlEUZBYZB1Ma9FUur6pMDIGiAZA1NNFamHQyJ1hgKSwz9fMykQ0AS9KTLRIQ8atWvNHDptHc3ZAZCYvJOZCAisi2CPyY1PqZCsp3DAF6tXvWRyU5pZAkshYbgDQwvyOOR0MsgSGIj78EZCZCwyocntPPFAR0TKYEZD'));
+
+
+pairUser(testUserToken).then((user, similarities) => {
+	console.log(user);
+	console.log(similarities);
+})
 
 /* GET /match. */
 router.get('/', function(req, res, next) {
-	pairUser(testUserToken).then((user, similarities) => {
-		console.log(user);
-		console.log(similarities);
-	})
 
 	(async function() {
 		var address = await getUserFields(testUserToken, 'address');
