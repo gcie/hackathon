@@ -59,7 +59,7 @@ router.get('/', function(req, res, next) {
 		var television = await getUserFields(testUserToken, 'television');
 		
 		console.log(location);
-      //  res.send(String(f("Wiadomość", "xd")));
+        res.send(String(f("Wiadomość", "xd")));
 	})();
 });
 
