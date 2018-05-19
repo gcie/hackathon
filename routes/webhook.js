@@ -27,11 +27,11 @@ router.post('/', function (req, res) {
 				//sendGenericMessage(sender)
 				continue;
 			}
-			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200));
+			//sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200));
 		}
 		if (event.postback) {
 			let text = JSON.stringify(event.postback);
-			sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token);
+			//sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token);
 			continue;
 		}
 	}
@@ -44,7 +44,7 @@ function sendTextMessage(sender, text) {
 	
 	request({
 		url: 'https://graph.facebook.com/v3.0/me/messages',
-		qs: { access_token:process.env.PAGE_MSG_TOKEN },
+		qs: { access_token: process.env.PAGE_MSG_TOKEN },
 		method: 'POST',
 		json: {
 			recipient: { id: sender },
