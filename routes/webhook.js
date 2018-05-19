@@ -28,7 +28,7 @@ router.post('/', function (req, res) {
 				console.log("FOUND");
 				if (event.message && event.message.text) {
 					console.log("MESSAGE");
-					db.getUserMatch(sender).then(match => {
+					db.getUserMatch(sender, match => {
 						if(match != null) {
 							console.log("SENDING TO MATCH: " + event.message.text);
 							sendTextMessage(match, event.message.text);
@@ -36,7 +36,7 @@ router.post('/', function (req, res) {
 							console.log("SENDING TO SENDER");
 							sendTextMessage(sender, "Select \"Actions\" -> \"Find match\" from menu");
 						}
-					}).catch(err => {console.log("ERROR GETTING MATCH: " + err);});
+					});
 				}
 				if (event.postback) {
 					console.log("POSTBACK");
@@ -50,7 +50,7 @@ router.post('/', function (req, res) {
 				console.log("LOGIN REQUEST");
 				sendLoginRequestMessage(sender);
 			}
-		}).catch(err => {console.log("ERROR CHECKING USER: " + err);});
+		});
 	}
 	res.sendStatus(200);
 })
