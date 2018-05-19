@@ -4,8 +4,7 @@ const request = require('request');
 const express = require('express');
 const router = express.Router();
 
-var Database = require('../models/database');
-var db = new Database();
+var db = require('../models/database');
 
 // for facebook verification
 router.get('/', function (req, res) {

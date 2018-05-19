@@ -1,8 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var request = require('request');
-var Database = require('../models/database')
-var db = new Database();
+var db = require('../models/database');
 
 var fields = 'address,age_range,birthday,education,favorite_athletes,favorite_teams,gender,hometown,languages,link,location,quotes,sports,books,friends,events,games,likes,movies,music,television';
 
