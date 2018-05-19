@@ -14,25 +14,27 @@ router.get('/', function (req, res) {
 
 // to post data
 router.post('/', function (req, res) {
-	/*let messaging_events = req.body.entry[0].messaging
+	let messaging_events = req.body.entry[0].messaging;
 	for (let i = 0; i < messaging_events.length; i++) {
-		let event = req.body.entry[0].messaging[i]
-		let sender = event.sender.id
+		let event = req.body.entry[0].messaging[i];
+		let sender = event.sender.id;
+		console.log(event);
+		console.log(sender);
 		if (event.message && event.message.text) {
-			let text = event.message.text
+			let text = event.message.text;
 			if (text === 'Generic'){ 
-				console.log("welcome to chatbot")
+				console.log("welcome to chatbot");
 				//sendGenericMessage(sender)
-				continue
+				continue;
 			}
-			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
+			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200));
 		}
 		if (event.postback) {
-			let text = JSON.stringify(event.postback)
-			sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
-			continue
+			let text = JSON.stringify(event.postback);
+			sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token);
+			continue;
 		}
-	}*/
+	}
 	res.sendStatus(200)
 })
 
