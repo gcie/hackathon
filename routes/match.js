@@ -2,17 +2,76 @@ var express = require('express');
 var router = express.Router();
 var request = require('request');
 
-var testUserToken = 'EAACEdEose0cBAE4lqhXf5jqSp58xiFLhQul2e4pe5d8W7h8xWhj1U07EruMfLw5Np2otLtMp727ZBDjSMW67Li0ZCN5KdXkZCJYHex9kOugZBv3t5BMvE7k4XvykSSRXaB7sF0yVEd4cOMt8ZBwyNWFLZCBLEq7UpVZCv2RS2h03ZAcRC2YryMlljnKdqXhORGwfRibZCsuVBbQZDZD';
+var testUserToken = 'EAACEdEose0cBANPlm2bPsQkhxZAUBjfb3NYQYnQCvAwo0k8Sl6BL2uMqVwaOFARHTIUh0N38kwRNevrz5O9rUVvK9Bax4JGiPneh0CCu64TWrvxHwGYBhok1TFcG80GtbXILOml60lYbDxxSC8ReQ23hiML195kCOVrPICe4RiVRQlm54bPEzIfYkVLMx9ZAcg4U0blAZDZD';
 
 function getAllUsers() {
-	
+	return undefined;
+}
 
+function Queue() {
+	this.data = [];
+}
+  
+Queue.prototype.add = function(record) {
+	this.data.unshift(record);
+}
+  
+Queue.prototype.remove = function() {
+	this.data.pop();  
+}
+
+Queue.prototype.empty = function() {
+	return this.data.length == 0;
+}
+    
+Queue.prototype.first = function() {
+	return this.data[0];  
+}
+    
+Queue.prototype.last = function() {  
+	return this.data[this.data.length - 1];
+}
+ 
+Queue.prototype.size = function() {
+	return this.data.length;
+}
+
+function getFriends(user) {
+	//var userToken = ? find user token here
+	var friends = await getUserFields(user, 'friends');
+	// find friends ids in database
 	return undefined;
 }
 
 // k is a maximum distance in relationship between fixed user and others
 function getKUsers(user, k) {
-	
+	const q = new Queue;
+	q.add(user);
+
+	var dict = {};
+
+	while (!q.empty()) {
+		var elem = q.first;
+		depth = dict[elem];
+		if (depth && depth == k) {
+			var arr = [];
+			for (var elem in dict) {
+				if (elem == k - 1) {
+					arr.push(elem);
+				}
+			}
+			return arr;
+		}
+		q.remove();
+
+		var friends = getFriends(users);
+		for (var friend in friends) {
+			if (!dict[friend]) {
+				q.add(friend);
+				dict[friend] = dict[elem] + 1;
+			}
+		}
+	}
 }
 
 function findOptimalUser(userToPair) {
