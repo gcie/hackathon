@@ -2,14 +2,12 @@ var express = require('express');
 var router = express.Router();
 var request = require('request');
 var Database = require('../models/database')
+var db = new Database();
 
 var testUserToken = 'EAACEdEose0cBANPlm2bPsQkhxZAUBjfb3NYQYnQCvAwo0k8Sl6BL2uMqVwaOFARHTIUh0N38kwRNevrz5O9rUVvK9Bax4JGiPneh0CCu64TWrvxHwGYBhok1TFcG80GtbXILOml60lYbDxxSC8ReQ23hiML195kCOVrPICe4RiVRQlm54bPEzIfYkVLMx9ZAcg4U0blAZDZD';
 
 function getAllUsers() {
-	var db = new Database();
-	var Users = db.getUsers();
-
-	return Users;
+	return db.getUsers();
 }
 
 function Queue() {
@@ -162,8 +160,10 @@ function getUserFields(userToken, field, next) {
 	
 }
 
-function pairUser(user_psid) {
-	var Users = getAllUsers();
+async function pairUser(user_psid) {
+	var Users = await getAllUsers();
+	console.log("Users: " + Users);
+
 	for (var user in Users) {
 		if (user.psid == user_psid) continue;
 

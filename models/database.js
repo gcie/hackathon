@@ -19,7 +19,7 @@ Database.prototype.getUserToken = function(psid) {
 }
 
 Database.prototype.getUsers = function() {
-    return this.db.oneOrNone("SELECT psid, token, int_psid FROM users");
+    return this.db.all("SELECT psid, token, int_psid FROM users");
 }
 
 Database.prototype.insertUser = function(user) {
