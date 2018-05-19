@@ -57,9 +57,12 @@ router.get('/', function(req, res, next) {
 		var movies = await getUserFields(testUserToken, 'movies');
 		var music = await getUserFields(testUserToken, 'music');
 		var television = await getUserFields(testUserToken, 'television');
+        
+        var user = await getUserFields(testUserToken, 'address,age_range,birthday,education,favorite_athletes,favorite_teams,gender,hometown,languages,link,location,quotes,sports,books,friends,events,games,likes,movies,music,television');
+        
 		
 		console.log(location);
-        res.send(String(f("Wiadomość", "xd")));
+        res.send(String(user));
 	})();
 });
 
