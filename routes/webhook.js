@@ -22,16 +22,11 @@ router.post('/', function (req, res) {
 		console.log(sender);
 		if (event.message && event.message.text) {
 			let text = event.message.text;
-			if (text === 'Generic'){ 
-				console.log("welcome to chatbot");
-				//sendGenericMessage(sender)
-				continue;
-			}
-			//sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200));
+			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200));
 		}
 		if (event.postback) {
 			let text = JSON.stringify(event.postback);
-			//sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token);
+			sendTextMessage(sender, "Postback received: " + text.substring(0, 200), token);
 			continue;
 		}
 	}
@@ -40,7 +35,9 @@ router.post('/', function (req, res) {
 
 
 function sendTextMessage(sender, text) {
-	let messageData = { text:text };
+	console.log("Sending text message: " + text);
+	
+	let messageData = { text: text };
 	
 	request({
 		url: 'https://graph.facebook.com/v3.0/me/messages',
