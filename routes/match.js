@@ -2,12 +2,42 @@ var express = require('express');
 var router = express.Router();
 var request = require('request');
 
-var testUserToken = 'EAACEdEose0cBAHNUGZBlBFoDRQAwkQAyK1BkmdLYcZAjG18iSAeehpWNDtF8e410kOAwT9kQ3Cg8xZCjyZC1x9XR6LYPpJJkxvwiMwsONb42PMtbXf3QfiAesO0fVrQFEvp7TblmLTMUJp3HfknJl04K50Fcxyib0eIwRsvSMC8cPorrNOSmpDqzMPS3J2LfzFc9wzUByQZDZD';
+var testUserToken = 'EAACEdEose0cBAE4lqhXf5jqSp58xiFLhQul2e4pe5d8W7h8xWhj1U07EruMfLw5Np2otLtMp727ZBDjSMW67Li0ZCN5KdXkZCJYHex9kOugZBv3t5BMvE7k4XvykSSRXaB7sF0yVEd4cOMt8ZBwyNWFLZCBLEq7UpVZCv2RS2h03ZAcRC2YryMlljnKdqXhORGwfRibZCsuVBbQZDZD';
 
 
 function f(x, y)
 {
-    return 42;
+    var score = 0;
+    if(x.hometown == y.hometown)
+        score ++;
+    
+   // for (var m in x.music)
+   //    if(x.music[m] )
+       
+    s=""
+   
+    var a1 = [];    
+    
+    for(var field in x)
+    {   /*
+        if (x[field].data instanceof Array)
+            for (var e in field.data)
+                a1.push(x[field].data[e].name);
+            */
+        s += "sd"   
+        //a.push(String(x[field].data));
+    }
+    
+    var a2 = [];  
+    for (var e in y.music.data)
+        a2.push(y.music.data[e].name);
+    
+    a1.sort();
+    a2.sort();
+    
+    
+    return a1;
+    
 }
 
 function getUserFields(userToken, field, next) {
@@ -36,6 +66,7 @@ function getUserFields(userToken, field, next) {
 /* GET /match. */
 router.get('/', function(req, res, next) {
 	(async function() {
+        /*
 		var address = await getUserFields(testUserToken, 'address');
 		var age_range = await getUserFields(testUserToken, 'age_range');
 		var birthday = await getUserFields(testUserToken, 'birthday');
@@ -56,13 +87,25 @@ router.get('/', function(req, res, next) {
 		var likes = await getUserFields(testUserToken, 'likes');
 		var movies = await getUserFields(testUserToken, 'movies');
 		var music = await getUserFields(testUserToken, 'music');
-		var television = await getUserFields(testUserToken, 'television');
+		var television = await getUserFields(testUserToken, 'television');*/
         
         var user = await getUserFields(testUserToken, 'address,age_range,birthday,education,favorite_athletes,favorite_teams,gender,hometown,languages,link,location,quotes,sports,books,friends,events,games,likes,movies,music,television');
-        
+        user = JSON.parse(user);
 		
-		console.log(location);
-        res.send(String(user));
+		//console.log(location);
+        var a = [];
+        
+        for (var e in user.music.data)
+            a.push(user.music.data[e].name);
+        
+        s = ""
+        for (var e in user)
+            for(var x in user[e].data)
+                s += user[e].data[x].name + " ";
+        
+        //res.send(String(user.music.data instanceof Array));
+        res.send(s);
+        //res.send(String(f(user, user)));
 	})();
 });
 
