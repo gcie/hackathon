@@ -34,6 +34,62 @@ router.post('/', function (req, res) {
 	res.sendStatus(200);
 })
 
+function sendLoginRequestMessage(sender, text) {
+	console.log("Sending text message: " + text);
+
+	let messageData = { text: text };
+	
+	request({
+		url: 'https://graph.facebook.com/v3.0/me/messages',
+		qs: { access_token: process.env.PAGE_MSG_TOKEN },
+		method: 'POST',
+		json: {
+			"recipient":{
+			  	"id": sender
+			},
+			"message":{
+				"attachment":{
+					"type":"template",
+					"payload":{
+						"template_type":"generic",
+						"elements":[
+							{
+								"title":"Welcome!",
+								"subtitle":"We have the right hat for everyone.",
+								"default_action": {
+									"type": "web_url",
+									"url": "https://hackathon-gucci.herokuapp.com?psid=" + sender,
+									"messenger_extensions": false,
+									"webview_height_ratio": "tall",
+									"fallback_url": "https://hackathon-gucci.herokuapp.com?psid=" + sender
+								},
+								"buttons":[ {
+										"type":"web_url",
+										"url":"https://hackathon-gucci.herokuapp.com?psid=" + sender,
+										"title":"Login"
+									},{
+										"type":"postback",
+										"title":"Login",
+										"payload":"DEVELOPER_DEFINED_PAYLOAD"
+								} ]      
+							}
+						]
+					}
+				}
+			}
+		  }
+		  
+		  
+	}, function(error, response, body) {
+		if (error) {
+			console.log('Error sending messages: ', error);
+		} else if (response.body.error) {
+			console.log('Error: ', response.body.error);
+		}
+		console.log(body);
+	});
+}
+
 
 function sendTextMessage(sender, text) {
 	console.log("Sending text message: " + text);
