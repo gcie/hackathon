@@ -1,6 +1,6 @@
 'use strict'
 
-const express = require('express')
+const express = require('express');
 const router = express.Router();
 
 // for facebook verification
@@ -14,7 +14,7 @@ router.get('/', function (req, res) {
 
 // to post data
 router.post('/', function (req, res) {
-	let messaging_events = req.body.entry[0].messaging
+	/*let messaging_events = req.body.entry[0].messaging
 	for (let i = 0; i < messaging_events.length; i++) {
 		let event = req.body.entry[0].messaging[i]
 		let sender = event.sender.id
@@ -33,32 +33,28 @@ router.post('/', function (req, res) {
 			continue
 		}
 	}
-	res.sendStatus(200)
+	res.sendStatus(200)*/
 })
 
 
-// recommended to inject access tokens as environmental variables, e.g.
-// const token = process.env.FB_PAGE_ACCESS_TOKEN
-const token = "<FB_PAGE_ACCESS_TOKEN>"
-
 function sendTextMessage(sender, text) {
-	let messageData = { text:text }
+	let messageData = { text:text };
 	
 	request({
-		url: 'https://graph.facebook.com/v2.6/me/messages',
-		qs: {access_token:token},
+		url: 'https://graph.facebook.com/v3.0/me/messages',
+		qs: { access_token:process.env.PAGE_MSG_TOKEN },
 		method: 'POST',
 		json: {
-			recipient: {id:sender},
+			recipient: { id: sender },
 			message: messageData,
 		}
 	}, function(error, response, body) {
 		if (error) {
-			console.log('Error sending messages: ', error)
+			console.log('Error sending messages: ', error);
 		} else if (response.body.error) {
-			console.log('Error: ', response.body.error)
+			console.log('Error: ', response.body.error);
 		}
-	})
+	});
 }
 
 function sendGenericMessage(sender) {
