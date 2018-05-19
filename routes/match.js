@@ -4,40 +4,67 @@ var request = require('request');
 
 var testUserToken = 'EAACEdEose0cBAE4lqhXf5jqSp58xiFLhQul2e4pe5d8W7h8xWhj1U07EruMfLw5Np2otLtMp727ZBDjSMW67Li0ZCN5KdXkZCJYHex9kOugZBv3t5BMvE7k4XvykSSRXaB7sF0yVEd4cOMt8ZBwyNWFLZCBLEq7UpVZCv2RS2h03ZAcRC2YryMlljnKdqXhORGwfRibZCsuVBbQZDZD';
 
+function getAllUsers() {
+	
 
-function f(x, y)
-{
-    var score = 0;
-    if(x.hometown == y.hometown)
-        score ++;
-    
-   // for (var m in x.music)
-   //    if(x.music[m] )
-       
-    s=""
-   
-    var a1 = [];    
-    
-    for(var field in x)
-    {   /*
-        if (x[field].data instanceof Array)
-            for (var e in field.data)
-                a1.push(x[field].data[e].name);
-            */
-        s += "sd"   
-        //a.push(String(x[field].data));
-    }
-    
-    var a2 = [];  
-    for (var e in y.music.data)
-        a2.push(y.music.data[e].name);
-    
-    a1.sort();
-    a2.sort();
-    
-    
-    return a1;
-    
+	return undefined;
+}
+
+// k is a maximum distance in relationship between fixed user and others
+function getKUsers(user, k) {
+	
+}
+
+function findOptimalUser(userToPair) {
+	var users = getUsers();
+	var maximum = 0;
+	var maximumUser = undefined;
+	for (var user in users) {
+		var heuroVal = compareUsers(user, userToPair);
+		if (heuroVal > maximum) {
+			maximum = heuroVal;
+			maximumUser = user;
+		}
+	}
+
+	return maximumUser;
+}
+
+function compareUsers(user1, user2) {
+	var similarity = 0
+	for (var key in user1) {
+		var weight = Math.floor(Math.random() * 5 + 1);
+		try {
+			var arr1 = user1[key].data.sort();
+			var arr2 = user2[key].data.sort();
+		}catch(exception) {
+			if (user1[key].data == user2[key].data) {
+				similarity += weight;
+			}
+			continue;
+		}
+
+		// if not array
+		var l = 0;
+		var r = 0;
+		var count = 0;
+		for (; l < arr1.length && r < arr2.length;) {
+			if (arr1[l] == arr2[r]) {
+				count++;
+				l++; r++;
+			}
+			else if (arr1[l] < arr2[r]) {
+				l++;
+			}
+			else if (arr1[l] > arr2[r]) {
+				r++;
+			}
+		}
+
+		similarity = similarity + (count * weight);
+	}
+
+	return similarity;
 }
 
 function getUserFields(userToken, field, next) {
@@ -66,7 +93,6 @@ function getUserFields(userToken, field, next) {
 /* GET /match. */
 router.get('/', function(req, res, next) {
 	(async function() {
-        /*
 		var address = await getUserFields(testUserToken, 'address');
 		var age_range = await getUserFields(testUserToken, 'age_range');
 		var birthday = await getUserFields(testUserToken, 'birthday');
@@ -87,25 +113,13 @@ router.get('/', function(req, res, next) {
 		var likes = await getUserFields(testUserToken, 'likes');
 		var movies = await getUserFields(testUserToken, 'movies');
 		var music = await getUserFields(testUserToken, 'music');
-		var television = await getUserFields(testUserToken, 'television');*/
+		var television = await getUserFields(testUserToken, 'television');
         
         var user = await getUserFields(testUserToken, 'address,age_range,birthday,education,favorite_athletes,favorite_teams,gender,hometown,languages,link,location,quotes,sports,books,friends,events,games,likes,movies,music,television');
-        user = JSON.parse(user);
+		user = JSON.parse(user);
 		
-		//console.log(location);
-        var a = [];
-        
-        for (var e in user.music.data)
-            a.push(user.music.data[e].name);
-        
-        s = ""
-        for (var e in user)
-            for(var x in user[e].data)
-                s += user[e].data[x].name + " ";
-        
-        //res.send(String(user.music.data instanceof Array));
-        res.send(s);
-        //res.send(String(f(user, user)));
+		var result = compareUsers(user, user);
+		console.log("result is: " + result);
 	})();
 });
 
