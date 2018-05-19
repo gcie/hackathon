@@ -32,8 +32,8 @@ router.post('/', function (req, res) {
 			sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
 			continue
 		}
-	}
-	res.sendStatus(200)*/
+	}*/
+	res.sendStatus(200)
 })
 
 
