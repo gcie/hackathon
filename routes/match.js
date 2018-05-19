@@ -91,6 +91,7 @@ function findOptimalUser(userToPair) {
 
 function compareUsers(user1, user2) {
 	var similarity = 0
+    var similarities = {}
 	for (var key in user1) {
 		var weight = Math.floor(Math.random() * 5 + 1);
 		try {
@@ -102,15 +103,18 @@ function compareUsers(user1, user2) {
 			}
 			continue;
 		}
+        
+        var matching = []
 
-		// if not array
 		var l = 0;
 		var r = 0;
 		var count = 0;
 		for (; l < arr1.length && r < arr2.length;) {
 			if (arr1[l] == arr2[r]) {
 				count++;
-				l++; r++;
+			
+                matching.push(arr2[r].name);
+                l++; r++;
 			}
 			else if (arr1[l] < arr2[r]) {
 				l++;
@@ -119,11 +123,14 @@ function compareUsers(user1, user2) {
 				r++;
 			}
 		}
+        
+        if(matching.length > 0)
+            similarities[key] = matching
 
 		similarity = similarity + (count * weight);
 	}
-
-	return similarity;
+   
+	return [similarity, JSON.stringify(similarities)];
 }
 
 function getUserFields(userToken, field, next) {
