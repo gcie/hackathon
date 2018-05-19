@@ -1,11 +1,15 @@
 var express = require('express');
 var router = express.Router();
 var request = require('request');
+var Database = require('../models/database')
 
 var testUserToken = 'EAACEdEose0cBANPlm2bPsQkhxZAUBjfb3NYQYnQCvAwo0k8Sl6BL2uMqVwaOFARHTIUh0N38kwRNevrz5O9rUVvK9Bax4JGiPneh0CCu64TWrvxHwGYBhok1TFcG80GtbXILOml60lYbDxxSC8ReQ23hiML195kCOVrPICe4RiVRQlm54bPEzIfYkVLMx9ZAcg4U0blAZDZD';
 
 function getAllUsers() {
-	return undefined;
+	var db = new Database();
+	var Users = db.getUsers();
+
+	return Users;
 }
 
 function Queue() {
@@ -36,7 +40,9 @@ Queue.prototype.size = function() {
 	return this.data.length;
 }
 
-function getFriends(user) {
+function getFriends(user) { // user by psid
+	var db = new Database();
+	var userToken = db.getUserToken(user);
 	//var userToken = ? find user token here
 	var friends = getUserFields(user, 'friends');
 	// find friends ids in database
@@ -156,8 +162,19 @@ function getUserFields(userToken, field, next) {
 	
 }
 
+function pairUser(user_psid) {
+	var Users = getAllUsers();
+	for (var user in Users) {
+		if (user.psid == user_psid) continue;
+
+		[value, similarities] = compareUsers(user_psid, user.psid);
+	}
+}
+
 /* GET /match. */
 router.get('/', function(req, res, next) {
+	var user = pairUser(testUserToken);
+
 	(async function() {
 		var address = await getUserFields(testUserToken, 'address');
 		var age_range = await getUserFields(testUserToken, 'age_range');

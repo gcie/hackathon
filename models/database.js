@@ -18,6 +18,10 @@ Database.prototype.getUserToken = function(psid) {
     return this.db.oneOrNone("SELECT token FROM users WHERE psid=$1", psid);
 }
 
+Database.prototype.getUsers = function() {
+    return this.db.oneOrNone("SELECT psid, token, int_psid FROM users");
+}
+
 Database.prototype.insertUser = function(user) {
     return this.db.oneOrNone('SELECT token FROM users WHERE psid=${psid}', user)
     .then(token => {
