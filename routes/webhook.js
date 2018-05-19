@@ -1,5 +1,6 @@
 'use strict'
 
+const request = require('request');
 const express = require('express');
 const router = express.Router();
 
@@ -22,31 +23,29 @@ router.post('/', function (req, res) {
 		console.log(sender);
 		if (event.message && event.message.text) {
 			let text = event.message.text;
-			if (text === 'Generic'){ 
-				console.log("welcome to chatbot");
-				//sendGenericMessage(sender)
-				continue;
-			}
-			//sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200));
+			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200));
 		}
 		if (event.postback) {
 			let text = JSON.stringify(event.postback);
-			//sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token);
+			sendTextMessage(sender, "Postback received: " + text.substring(0, 200));
 			continue;
 		}
 	}
-	res.sendStatus(200)
+	res.sendStatus(200);
 })
 
 
 function sendTextMessage(sender, text) {
-	let messageData = { text:text };
+	console.log("Sending text message: " + text);
+
+	let messageData = { text: text };
 	
 	request({
-		url: 'https://graph.facebook.com/v3.0/me/messages',
+		url: 'https://graph.facebook.com/v2.6/me/messages',
 		qs: { access_token: process.env.PAGE_MSG_TOKEN },
 		method: 'POST',
 		json: {
+			messaging_type : 'RESPONSE',
 			recipient: { id: sender },
 			message: messageData,
 		}
@@ -56,6 +55,7 @@ function sendTextMessage(sender, text) {
 		} else if (response.body.error) {
 			console.log('Error: ', response.body.error);
 		}
+		console.log(body);
 	});
 }
 
