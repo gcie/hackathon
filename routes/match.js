@@ -59,7 +59,7 @@ router.get('/', function(req, res, next) {
 		var television = await getUserFields(testUserToken, 'television');
 		
 		console.log(location);
-		res.render('match', {appId : process.env.APPLICATION_ID, msg : String("Wiadomość", "xd")});    		
+        res.send(String(f("Wiadomość", "xd")));
 	})();
 });
 
