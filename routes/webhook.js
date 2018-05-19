@@ -60,7 +60,7 @@ function sendLoginRequestMessage(sender, text) {
 									"type": "web_url",
 									"url": "https://hackathon-gucci.herokuapp.com?psid=" + sender,
 									"messenger_extensions": false,
-									"webview_height_ratio": "tall"
+									"webview_height_ratio": "compact"
 								},
 								"buttons":[ {
 										"type":"web_url",
