@@ -134,7 +134,10 @@ function compareUsers(user1, user2) {
 		similarity = similarity + (count * weight);
 	}
    
-	return [similarity, JSON.stringify(similarities)];
+	return {
+		similarity: similarity, 
+		similarities: JSON.stringify(similarities)
+	};
 }
 
 function getUserFields(userToken, field, next) {
@@ -160,20 +163,36 @@ function getUserFields(userToken, field, next) {
 	
 }
 
-async function pairUser(user_psid) {
-	var Users = await getAllUsers();
-	console.log("Users: " + Users);
+function pairUser(user_psid) {
+	return new Promise((res, rej) => {
+		getAllUsers().then(users => {
+			max = 0;
+			maxSimiliarities = {};
+			maxUser = {};
+			for (var user in users) {
+				if (user.psid == user_psid) continue;
+		
+				var sim = compareUsers(user_psid, user.psid);
+				if (sim.similarity > max) {
+					max = sim.similarity;
+					maxSimiliarities = sim.similarities;
+					maxUser = user;
+				}
+			}		
 
-	for (var user in Users) {
-		if (user.psid == user_psid) continue;
-
-		[value, similarities] = compareUsers(user_psid, user.psid);
-	}
+			res(maxUser.psid, maxSimiliarities);
+		}).err(msg => {
+			rej(msg);
+		})
+	})
 }
 
 /* GET /match. */
 router.get('/', function(req, res, next) {
-	var user = pairUser(testUserToken);
+	pairUser(testUserToken).then((user, similarities) => {
+		console.log(user);
+		console.log(similarities);
+	})
 
 	(async function() {
 		var address = await getUserFields(testUserToken, 'address');
