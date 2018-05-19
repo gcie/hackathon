@@ -16,7 +16,6 @@ Database.prototype.checkUser = function(user) {
 
 // user: { psid }
 Database.prototype.insertUser = function(user) {
-    user.username = user.username || null;
     return this.db.none("INSERT INTO users(psid) VALUES (${psid});", user);
 };
 
