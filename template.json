@@ -1,0 +1,38 @@
+{
+  "recipient":{
+    "id":"<PSID>"
+  },
+  "message":{
+    "attachment":{
+      "type":"template",
+      "payload":{
+        "template_type":"generic",
+        "elements":[
+           {
+            "title":"Welcome!",
+            "subtitle":"We have the right hat for everyone.",
+            "default_action": {
+              "type": "web_url",
+              "url": "https://hackathon-gucci.herokuapp.com?psid=<PSID>",
+              "messenger_extensions": false,
+              "webview_height_ratio": "tall",
+              "fallback_url": "https://hackathon-gucci.herokuapp.com?psid=<PSID>"
+            },
+            "buttons":[
+              {
+                "type":"web_url",
+                "url":"https://hackathon-gucci.herokuapp.com?psid=<PSID>",
+                "title":"Login"
+              },{
+                "type":"postback",
+                "title":"Login",
+                "payload":"DEVELOPER_DEFINED_PAYLOAD"
+              }              
+            ]      
+          }
+        ]
+      }
+    }
+  }
+}
+
