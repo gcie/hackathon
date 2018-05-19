@@ -25,7 +25,9 @@ router.post('/', function (req, res) {
 		console.log(sender);
 		db.checkUser(sender, found => {
 			if(found) {
+				console.log("FOUND");
 				if (event.message && event.message.text) {
+					console.log("MESSAGE");
 					db.getUserMatch(sender).then(match => {
 						if(match != null) {
 							console.log("SENDING TO MATCH: " + event.message.text);
