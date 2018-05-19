@@ -214,7 +214,7 @@ function compareUsers(user1, user2) {
    
 	return {
 		similarity: similarity, 
-		similarities: JSON.stringify(similarities)
+		similarities: similarities
 	};
 }
 
