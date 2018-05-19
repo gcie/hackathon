@@ -4,7 +4,7 @@ var router = express.Router();
 /* GET oauth. */
 router.get('/', function(req, res) {
     console.log('GET REQUEST');
-    console.log(req);
+    console.log(req.query);
     res.sendStatus(200);
     //res.send('fblogin', {appId : process.env.APPLICATION_ID});
 });
