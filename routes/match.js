@@ -38,7 +38,7 @@ Queue.prototype.size = function() {
 
 function getFriends(user) {
 	//var userToken = ? find user token here
-	var friends = await getUserFields(user, 'friends');
+	var friends = getUserFields(user, 'friends');
 	// find friends ids in database
 	return undefined;
 }
