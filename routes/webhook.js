@@ -44,6 +44,7 @@ function sendTextMessage(sender, text) {
 		qs: { access_token: process.env.PAGE_MSG_TOKEN },
 		method: 'POST',
 		json: {
+			messaging_type : 'RESPONSE',
 			recipient: { id: sender },
 			message: messageData,
 		}
