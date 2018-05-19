@@ -26,7 +26,7 @@ router.post('/', function (req, res) {
 		}
 		if (event.postback) {
 			let text = JSON.stringify(event.postback);
-			sendTextMessage(sender, "Postback received: " + text.substring(0, 200), token);
+			sendTextMessage(sender, "Postback received: " + text.substring(0, 200));
 			continue;
 		}
 	}
@@ -36,7 +36,7 @@ router.post('/', function (req, res) {
 
 function sendTextMessage(sender, text) {
 	console.log("Sending text message: " + text);
-	
+
 	let messageData = { text: text };
 	
 	request({
