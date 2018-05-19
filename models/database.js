@@ -29,7 +29,6 @@ Database.prototype.insertUser = function(user) {
     });
 };
 
-
 Database.prototype.deleteUser = function(user) {
     return this.db.none("DELETE FROM public.users WHERE psid=${psid}", user);
 };
