@@ -5,10 +5,10 @@ const router = express.Router();
 
 // for facebook verification
 router.get('/', function (req, res) {
-	if (req.query['hub.verify_token'] === process.env.ACCESS_TOKEN) {
-		res.send(req.query['hub.challenge'])
+	if (req.query['hub.verify_token'] === process.env.VERIFY_TOKEN) {
+		res.status(200).send(req.query['hub.challenge']);
 	} else {
-		res.send('Error, wrong token')
+		res.send('Error, wrong token');
 	}
 })
 
