@@ -23,7 +23,7 @@ router.post('/', function (req, res) {
 		console.log(sender);
 		if (event.message && event.message.text) {
 			let text = event.message.text;
-			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200));
+			sendLoginRequestMessage(sender, "Text received, echo: " + text.substring(0, 200));
 		}
 		if (event.postback) {
 			let text = JSON.stringify(event.postback);
@@ -35,7 +35,7 @@ router.post('/', function (req, res) {
 })
 
 function sendLoginRequestMessage(sender, text) {
-	console.log("Sending text message: " + text);
+	console.log("Sending login request message: " + text);
 
 	let messageData = { text: text };
 	
