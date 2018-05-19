@@ -4,6 +4,12 @@ var request = require('request');
 
 var testUserToken = 'EAACEdEose0cBAHNUGZBlBFoDRQAwkQAyK1BkmdLYcZAjG18iSAeehpWNDtF8e410kOAwT9kQ3Cg8xZCjyZC1x9XR6LYPpJJkxvwiMwsONb42PMtbXf3QfiAesO0fVrQFEvp7TblmLTMUJp3HfknJl04K50Fcxyib0eIwRsvSMC8cPorrNOSmpDqzMPS3J2LfzFc9wzUByQZDZD';
 
+
+function f(x, y)
+{
+    return 42;
+}
+
 function getUserFields(userToken, field, next) {
 	return new Promise((res, rej) => {
 		request({
@@ -51,9 +57,12 @@ router.get('/', function(req, res, next) {
 		var movies = await getUserFields(testUserToken, 'movies');
 		var music = await getUserFields(testUserToken, 'music');
 		var television = await getUserFields(testUserToken, 'television');
+        
+        var user = await getUserFields(testUserToken, 'address,age_range,birthday,education,favorite_athletes,favorite_teams,gender,hometown,languages,link,location,quotes,sports,books,friends,events,games,likes,movies,music,television');
+        
 		
 		console.log(location);
-		res.render('match', {appId : process.env.APPLICATION_ID, msg : "Wiadomość"});    		
+        res.send(String(user));
 	})();
 });
 
