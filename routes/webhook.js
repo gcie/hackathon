@@ -34,9 +34,10 @@ router.post('/', function (req, res) {
 							console.log("SENDING TO SENDER");
 							sendTextMessage(sender, "Select \"Actions\" -> \"Find match\" from menu");
 						}
-					});
+					}).catch(err => {console.log("ERROR GETTING MATCH: " + err);});
 				}
 				if (event.postback) {
+					console.log("POSTBACK");
 					if(event.postback.payload == "FIND_MATCH") {
 						// TODO
 					} else if(event.postback.payload == "ABANDON") {
@@ -44,9 +45,10 @@ router.post('/', function (req, res) {
 					}
 				}
 			} else {
+				console.log("LOGIN REQUEST");
 				sendLoginRequestMessage(sender);
 			}
-		});
+		}).catch(err => {console.log("ERROR CHECKING USER: " + err);});
 	}
 	res.sendStatus(200);
 })
