@@ -26,10 +26,11 @@ router.post('/', function (req, res) {
 		console.log(sender);
 		db.checkUser(sender, found => {
 			if(found) {
-				if (event.message && event.message.text) {
+				if (event.message) {
 					db.getUserMatch(sender, match => {
 						if(match != null) {
-							sendTextMessage(match, event.message.text);
+							// sendTextMessage(match, event.message.text);
+							forwardMessage(match, event.message);
 						} else {
 							// sendTextMessage(sender, "Select \"Actions\" -> \"Find a match\" from menu");
 							sendMatchQuestion(sender, "Would you like to find a match?", "");
@@ -77,6 +78,41 @@ router.post('/', function (req, res) {
 	}
 	res.sendStatus(200);
 })
+
+
+function forwardMessage(recip, in_message)
+{
+	var new_message = {}
+
+	if("text" in in_message)
+		new_message["text"] = in_message["text"]
+
+	if("attachments" in in_message)
+		new_message["attachment"] = in_message["attachments"][0]
+
+	request({
+		url: 'https://graph.facebook.com/v3.0/me/messages',
+		qs: { access_token: process.env.PAGE_MSG_TOKEN },
+		method: 'POST',
+		json: {
+			messaging_type : 'RESPONSE',
+			"recipient":{
+			  	"id": recip
+			},
+			"message": new_message
+		}
+		  
+	}, function(error, response, body) {
+		if (error) {
+			console.log('Error sending messages: ', error);
+		} else if (response.body.error) {
+			console.log('Error: ', response.body.error);
+		}
+		console.log(body);
+	});
+
+
+}
 
 function sendLoginRequestMessage(sender, text) {	
 	request({
