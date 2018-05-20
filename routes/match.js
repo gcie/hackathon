@@ -167,51 +167,43 @@ function compareUsers(user1, user2) {
 	};
 }
 
-function getUserFields(userToken, field) {
-	return new Promise((res, rej) => {
-		request({
-			url: 'https://graph.facebook.com/v3.0/me?fields=' + field,
-			//'address,age_range,birthday,favorite_athletes,favorite_teams,gender,hometown,inspirational_people,languages'
-			qs: {
-				access_token: userToken
-			},
-			method: 'GET'
-		}, function(error, response, body) {
-			if (error) {
-				console.log('Error sending messages: ', error);
-			} else if (response.body.error) {
-				console.log('Error: ', response.body.error);
-			}
-			res(JSON.parse(body));
-		});
+function getUserFields(userToken, field, next) {
+	request({
+		url: 'https://graph.facebook.com/v3.0/me?fields=' + field,
+		//'address,age_range,birthday,favorite_athletes,favorite_teams,gender,hometown,inspirational_people,languages'
+		qs: {
+			access_token: userToken
+		},
+		method: 'GET'
+	}, function(error, response, body) {
+		if (error) {
+			console.log('Error sending messages: ', error);
+		} else if (response.body.error) {
+			console.log('Error: ', response.body.error);
+		}
+		next(JSON.parse(body));
 	});
 }
 
 function pairUser(user_psid, next) {
 	db.getUserToken(user_psid, user_token => {
-		getUserFields(user_token.token, fields).then(user_data => {
+		getUserFields(user_token.token, fields, user_data => {
 			getAllUsers(users => {
 				max = -1;
 				maxSimiliarities = {};
 				maxUser = {psid: -1};
-				user_promises = [];
 				for (var user of users) {
 					if (user.psid == user_psid) continue;
-					user_promises.push(new Promise((res, rej) => {
-						getUserFields(user.token, fields).then(user_data => {
-							var sim = compareUsers(user_data, userData2);
-							if (sim.similarity > max) {
-								max = sim.similarity;
-								maxSimiliarities = sim.similarities;
-								maxUser = user;
-							}
-							res();
-						});
-					}));
-				}
-				Promise.all(user_promises).then(() => {
-					next(maxUser.psid, maxSimiliarities);
-				});	
+					/*getUserFields(user.token, fields, userData2 => {
+						var sim = compareUsers(user_data, userData2);
+						if (sim.similarity > max) {
+							max = sim.similarity;
+							maxSimiliarities = sim.similarities;
+							maxUser = user;
+						}
+					});*/
+				}		
+				next(user.psid, maxSimiliarities);
 			});
 		});
 	});
