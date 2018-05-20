@@ -193,7 +193,7 @@ function pairUser(user_psid, next) {
 				maxSimiliarities = {};
 				maxUser = {psid: -1};
 				for(var i = 0; i < users.length; i += 1) {
-					user = users[i];
+					var user = users[i];
 					if (user.psid == user_psid) continue;
 					getUserFields(user.token, fields, userData2 => {
 						var sim = compareUsers(user_data, userData2);
