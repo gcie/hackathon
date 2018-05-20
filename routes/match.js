@@ -90,82 +90,166 @@ function findOptimalUser(userToPair) {
 	return maximumUser;
 }
 
+function compare_ages(a, b)
+{
+    l = Math.max(a.min, b.min);
+    r = Math.min(a.max, b.max);
+    
+    return r > l ;
+}
+
+function get_data(x)
+{
+    if(x.hasOwnProperty('data'))
+        return x.data;
+    
+    return x;
+        
+}
+
 function compareUsers(user1, user2) {
 	var similarity = 0
     var similarities = {}
 	for (var key in user1) {
 		var weight = Math.floor(Math.random() * 5 + 1);
-		try {
-            console.log(key)
-			var arr1 = user1[key].data.sort(function (a, b){return a.name < b.name});
-			var arr2 = user2[key].data.sort(function (a, b){return a.name < b.name});
-           // console.log(user2[key].paging);             
-		}catch(exception) {
-            //console.log(key)
-           // console.log(exception)
-            if(user2[key] == undefined)
-                continue;
+	
+        if(get_data(user1[key]) instanceof Array && get_data(user2[key]) instanceof Array) {
+			var arr1 = get_data(user1[key]).sort(function (a, b){return a.name < b.name});
+			var arr2 = get_data(user2[key]).sort(function (a, b){return a.name < b.name});
             
-            if(user1[key] instanceof Array && user2[key] instanceof Array) {
-                var arr1 = user1[key].sort(function (a, b){return a.name < b.name});
-                var arr2 = user2[key].sort(function (a, b){return a.name < b.name});
-            }
-            else if (key === "age_range")
-                console.log("age");
-            else if(key === "birthday")
-                console.log("bday");
-            else if(user1[key].hasOwnProperty('name'))
-                if (user1[key].name == user2[key].name) {
-                    similarity += weight;
-                    similarities[key] = [user2[key].name];
+            var matching = []
+
+            var l = 0;
+            var r = 0;
+            var count = 0;
+            for (; l < arr1.length && r < arr2.length;) {
+                if (arr1[l].name == arr2[r].name) {
+                    count++;
+                
+                    matching.push(arr2[r].name);
+                    l++; r++;
                 }
+                else if (arr1[l].name < arr2[r].name) {
+                    l++;
+                }
+                else if (arr1[l].name > arr2[r].name) {
+                    r++;
+                }
+            }
+        
+            if(matching.length > 0)
+                similarities[key] = matching;
+
+            similarity = similarity + (count * weight);
+        }
+          	
+        if(user2[key] == undefined)
+            continue;
+        else if (key === "age_range"  && compare_ages(user1[key], user2[key])) {
+            similarity += weight;
+            similarities[key] = ["similar age range"];
+        }
+        else if(key === "birthday" && String(user1[key]).substring(String(user1[key]).lastIndexOf("/") + 1) == 
+                String(user2[key]).substring(String(user2[key]).lastIndexOf("/") + 1)) {
+            similarity += weight;
+            similarities[key] = [String(user1[key]).substring(String(user1[key]).lastIndexOf("/") + 1)];
+        }
+        else if(user1[key].hasOwnProperty('name'))
+            if (user1[key].name == user2[key].name) {
+                similarity += weight;
+                similarities[key] = [user2[key].name];
+            }
             else
                 if (user1[key] == user2[key]) {
                     similarity += weight;
                     similarities[key] = [user2[key]];
                 }
-            /*
-			if (user1[key].name == user2[key].name) {
-				similarity += weight;
-                similarities[key] = [user2[key]];
-			}*/
-            
-            if(!(user1[key] instanceof Array && user2[key] instanceof Array))
-                continue;
-		}
-        
-        var matching = []
 
-		var l = 0;
-		var r = 0;
-		var count = 0;
-		for (; l < arr1.length && r < arr2.length;) {
-            //console.log(arr1[l])
-			if (arr1[l].name == arr2[r].name) {
-				count++;
-			
-                matching.push(arr2[r].name);
-                l++; r++;
-			}
-			else if (arr1[l].name < arr2[r].name) {
-				l++;
-			}
-			else if (arr1[l].name > arr2[r].name) {
-				r++;
-			}
-		}
-        
-        if(matching.length > 0)
-            similarities[key] = matching
-
-		similarity = similarity + (count * weight);
-	}
+         
+    }
    
 	return {
 		similarity: similarity, 
-		similarities: similarities
+		similarities: JSON.stringify(similarities)
 	};
 }
+
+// function compareUsers(user1, user2) {
+// 	var similarity = 0
+//     var similarities = {}
+// 	for (var key in user1) {
+// 		var weight = Math.floor(Math.random() * 5 + 1);
+// 		try {
+//             console.log(key)
+// 			var arr1 = user1[key].data.sort(function (a, b){return a.name < b.name});
+// 			var arr2 = user2[key].data.sort(function (a, b){return a.name < b.name});
+//            // console.log(user2[key].paging);             
+// 		}catch(exception) {
+//             //console.log(key)
+//            // console.log(exception)
+//             if(user2[key] == undefined)
+//                 continue;
+            
+//             if(user1[key] instanceof Array && user2[key] instanceof Array) {
+//                 var arr1 = user1[key].sort(function (a, b){return a.name < b.name});
+//                 var arr2 = user2[key].sort(function (a, b){return a.name < b.name});
+//             }
+//             else if (key === "age_range")
+//                 console.log("age");
+//             else if(key === "birthday")
+//                 console.log("bday");
+//             else if(user1[key].hasOwnProperty('name'))
+//                 if (user1[key].name == user2[key].name) {
+//                     similarity += weight;
+//                     similarities[key] = [user2[key].name];
+//                 }
+//             else
+//                 if (user1[key] == user2[key]) {
+//                     similarity += weight;
+//                     similarities[key] = [user2[key]];
+//                 }
+//             /*
+// 			if (user1[key].name == user2[key].name) {
+// 				similarity += weight;
+//                 similarities[key] = [user2[key]];
+// 			}*/
+            
+//             if(!(user1[key] instanceof Array && user2[key] instanceof Array))
+//                 continue;
+// 		}
+        
+//         var matching = []
+
+// 		var l = 0;
+// 		var r = 0;
+// 		var count = 0;
+// 		for (; l < arr1.length && r < arr2.length;) {
+//             //console.log(arr1[l])
+// 			if (arr1[l].name == arr2[r].name) {
+// 				count++;
+			
+//                 matching.push(arr2[r].name);
+//                 l++; r++;
+// 			}
+// 			else if (arr1[l].name < arr2[r].name) {
+// 				l++;
+// 			}
+// 			else if (arr1[l].name > arr2[r].name) {
+// 				r++;
+// 			}
+// 		}
+        
+//         if(matching.length > 0)
+//             similarities[key] = matching
+
+// 		similarity = similarity + (count * weight);
+// 	}
+   
+// 	return {
+// 		similarity: similarity, 
+// 		similarities: similarities
+// 	};
+// }
 
 function getUserFields(userToken, field, psid) {
 	return new Promise((res, rej) => {
