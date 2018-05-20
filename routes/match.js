@@ -193,21 +193,25 @@ function pairUser(user_psid, next) {
 	db.getUserToken(user_psid, user_token => {
 		getUserFields(user_token, fields).then(user_data => {
 			getAllUsers(users => {
-				max = -1;
-				maxSimiliarities = {};
-				maxUser = -1;
-				var promises = users.map(user => getUserFields(user.token, fields, user.psid));
-				Promise.all(promises).then(userdatas => {
-					for(var userdata of userdatas) {
-						var sim = compareUsers(userdata, user_data);
-						if(sim.similarity > max) {
-							max = sim.similarity;
-							maxSimiliarities = sim.similarities;
-							maxUser = userdata.psid;
+				if(users.length == 0) {
+					next(-1, {});
+				} else {
+					max = -1;
+					maxSimiliarities = {};
+					maxUser = -1;
+					var promises = users.map(user => getUserFields(user.token, fields, user.psid));
+					Promise.all(promises).then(userdatas => {
+						for(var userdata of userdatas) {
+							var sim = compareUsers(userdata, user_data);
+							if(sim.similarity > max) {
+								max = sim.similarity;
+								maxSimiliarities = sim.similarities;
+								maxUser = userdata.psid;
+							}
 						}
-					}
-					next(maxUser, maxSimiliarities);
-				});
+						next(maxUser, maxSimiliarities);
+					});
+				}
 			});
 		});
 	});
