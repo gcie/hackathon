@@ -53,7 +53,7 @@ router.post('/', function (req, res) {
 						});
 					} else if(event.postback.payload == "ABANDON") {
 						db.setWaiting(sender, false);
-						sendRematchMessage(sender, "You have left the conversation.", "Would you like to try again?");
+						sendMatchQuestion(sender, "You have left the conversation.", "Would you like to try again?");
 						db.getInterlocutor(sender, int_psid => {
 							if(int_psid != null) {
 								// sendTextMessage(int_psid, "Your match has left the conversation!");
