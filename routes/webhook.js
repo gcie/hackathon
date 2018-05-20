@@ -3,6 +3,7 @@
 const request = require('request');
 const express = require('express');
 const router = express.Router();
+var match = require('./match.js');
 
 var db = require('../models/database');
 
@@ -36,7 +37,17 @@ router.post('/', function (req, res) {
 				}
 				if (event.postback) {
 					if(event.postback.payload == "FIND_MATCH") {
-						db.setWaiting(sender, true);
+						match(sender, (int_psid, similarities) => {
+							if(int_psid == -1) {
+								db.setWaiting(sender, true);
+							} else {
+								db.setInterlogator(sender, int_psid);
+								db.setInterlogator(int_psid, sender);
+								db.setWaiting(int_psid, false);
+								sendTextMessage(int_psid, "We found you a match!");
+								sendTextMessage(sender, "We found you a match!");
+							}
+						});
 					} else if(event.postback.payload == "ABANDON") {
 						db.setWaiting(sender, false);
 						db.getInterlogtor(sender, int_psid => {

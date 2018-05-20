@@ -1,5 +1,3 @@
-var express = require('express');
-var router = express.Router();
 var request = require('request');
 var db = require('../models/database');
 
@@ -187,42 +185,29 @@ function getUserFields(userToken, field, next) {
 	});
 }
 
-function pairUser(user_psid) {
-	return new Promise((res, rej) => {
-		db.getUserToken(user_psid, user_token => {
-			getUserFields(user_token.token, fields, user_data => {
-				getAllUsers(users => {
-					max = -1;
-					maxSimiliarities = {};
-					maxUser = {};
-					for (var user of users) {
-						if (user.psid == user_psid) continue;
-						getUserFields(user.token, fields, userData2 => {
-							var sim = compareUsers(user_data, userData2);
-							if (sim.similarity > max) {
-								max = sim.similarity;
-								maxSimiliarities = sim.similarities;
-								maxUser = user;
-							}
-						});
-					}		
+function pairUser(user_psid, next) {
+	db.getUserToken(user_psid, user_token => {
+		getUserFields(user_token.token, fields, user_data => {
+			getAllUsers(users => {
+				max = -1;
+				maxSimiliarities = {};
+				maxUser = {psid: -1};
+				for (var user of users) {
+					if (user.psid == user_psid) continue;
+					getUserFields(user.token, fields, userData2 => {
+						var sim = compareUsers(user_data, userData2);
+						if (sim.similarity > max) {
+							max = sim.similarity;
+							maxSimiliarities = sim.similarities;
+							maxUser = user;
+						}
+					});
+				}		
 		
-					res(maxUser.psid, maxSimiliarities);
-				});
-			})
-		})
-	})	
+				next(maxUser.psid, maxSimiliarities);
+			});
+		});
+	});
 }
 
-/* GET /match. */
-router.get('/', function(req, res, next) {
-	pairUser(userToken).then((user, similarities) => {
-		console.log(user);
-		console.log(similarities);
-	})
-
-	res.route.query.user = user;
-	res.route.query.similarities = similarities;
-});
-
-module.exports = router;
+module.exports = pairUser;
