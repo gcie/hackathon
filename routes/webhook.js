@@ -51,8 +51,8 @@ router.post('/', function (req, res) {
 								sendGenericDialog(int_psid, "We've found you a match!", "Say hello!");
 								sendGenericDialog(sender, "We've found you a match!", "Say hello!");
 								if(similarities.hasOwnProperty('friends')) {
-									sendGenericDialog(int_psid, similarities.friends[0], "Test");
-									sendGenericDialog(sender, similarities.friends[0], "Test");
+									sendGenericDialog(int_psid, "You hava a common friend " + similarities.friends[0] + "!", "Feel free to discuss");
+									sendGenericDialog(sender, "You hava a common friend " + similarities.friends[0] + "!", "Feel free to discuss");
 								} 
 								console.log(similarities);
 							}
