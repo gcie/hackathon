@@ -51,7 +51,7 @@ var Database = (function() {
         },
         getInterlocutor: function(psid, next) {
             get();
-            db.none("SELECT int_psid FROM users WHERE psid=$1;", psid).then(next);
+            db.one("SELECT int_psid FROM users WHERE psid=$1;", psid).then(next);
         },
         setWaiting: function(psid, waiting, next) {
             get();
