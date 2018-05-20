@@ -29,7 +29,8 @@ router.post('/', function (req, res) {
 				if (event.message && event.message.text) {
 					db.getUserMatch(sender, match => {
 						if(match != null) {
-							sendTextMessage(match, event.message.text);
+							// sendTextMessage(match, event.message.text);
+							forwardMessage(match, event.message);
 						} else {
 							// sendTextMessage(sender, "Select \"Actions\" -> \"Find a match\" from menu");
 							sendMatchQuestion(sender, "Would you like to find a match?", "");
@@ -77,6 +78,35 @@ router.post('/', function (req, res) {
 	}
 	res.sendStatus(200);
 })
+
+
+function forwardMessage(recip, in_message)
+{
+	delete in_message["mid"];
+
+	request({
+		url: 'https://graph.facebook.com/v3.0/me/messages',
+		qs: { access_token: process.env.PAGE_MSG_TOKEN },
+		method: 'POST',
+		json: {
+			messaging_type : 'RESPONSE',
+			"recipient":{
+			  	"id": recip
+			},
+			"message": in_message
+		}
+		  
+	}, function(error, response, body) {
+		if (error) {
+			console.log('Error sending messages: ', error);
+		} else if (response.body.error) {
+			console.log('Error: ', response.body.error);
+		}
+		console.log(body);
+	});
+
+
+}
 
 function sendLoginRequestMessage(sender, text) {	
 	request({
