@@ -143,7 +143,7 @@ function compareUsers(user1, user2) {
             similarity = similarity + (count * weight);
         }
           	
-        if(user2[key] == undefined)
+        if (user1[key] == undefined || user2[key] == undefined)
             continue;
         else if (key === "age_range"  && compare_ages(user1[key], user2[key])) {
             similarity += weight;
