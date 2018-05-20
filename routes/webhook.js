@@ -42,13 +42,14 @@ router.post('/', function (req, res) {
 						match(sender, (int_psid, similarities) => {
 							console.log("MATCHED with: " + int_psid);
 							if(int_psid == -1) {
+								sendGenericDialog(sender, "We couldn't find a match right away.", "Please wait for a match");
 								db.setWaiting(sender, true);
 							} else {
 								db.setInterlocutor(sender, int_psid);
 								db.setInterlocutor(int_psid, sender);
 								db.setWaiting(int_psid, false);
-								sendTextMessage(int_psid, "We've found you a match!");
-								sendTextMessage(sender, "We've found you a match!");
+								sendGenericDialog(int_psid, "We've found you a match!", "");
+								sendGenericDialog(sender, "We've found you a match!", "");
 							}
 						});
 					} else if(event.postback.payload == "ABANDON") {
@@ -143,6 +144,43 @@ function sendTextMessage(sender, text) {
 		console.log(body);
 	});
 }
+
+function sendGenericDialog(sender, text, subtext){	
+	request({
+		url: 'https://graph.facebook.com/v3.0/me/messages',
+		qs: { access_token: process.env.PAGE_MSG_TOKEN },
+		method: 'POST',
+		json: {
+			"recipient":{
+			  	"id": sender
+			},
+			"message":{
+				"attachment":{
+					"type":"template",
+					"payload":{
+						"template_type":"generic",
+						"elements":[
+							{
+								"title": text,
+								"subtitle": subtext,
+								
+							}
+						]
+					}
+				}
+			}
+		}
+		  
+	}, function(error, response, body) {
+		if (error) {
+			console.log('Error sending messages: ', error);
+		} else if (response.body.error) {
+			console.log('Error: ', response.body.error);
+		}
+		console.log(body);
+	});
+}
+
 
 function sendMatchQuestion(sender, text, subtext){	
 	request({
