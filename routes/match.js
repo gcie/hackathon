@@ -189,6 +189,7 @@ function pairUser(user_psid, next) {
 	db.getUserToken(user_psid, user_token => {
 		getUserFields(user_token.token, fields, user_data => {
 			getAllUsers(users => {
+				console.log(users);
 				max = -1;
 				maxSimiliarities = {};
 				maxUser = {psid: -1};

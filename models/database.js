@@ -75,42 +75,5 @@ var Database = (function() {
     }
 })();
 
-/*
-Database.prototype.checkUser = function(psid) {
-    return new Promise(function(res, rej) {
-        this.db.oneOrNone('SELECT token FROM users WHERE psid=$1', psid)
-        .then(function(token) {
-            res(token !== null);
-        }, rej);
-    });
-};
-
-Database.prototype.getUserMatch = function(psid) {
-    return this.db.oneOrNone("SELECT int_psid FROM users WHERE psid=$1", psid);
-}
-
-Database.prototype.getUserToken = function(psid) {
-    return this.db.oneOrNone("SELECT token FROM users WHERE psid=$1", psid);
-}
-
-Database.prototype.getUsers = function() {
-    return this.db.any("SELECT psid, token, int_psid FROM users");
-}
-
-Database.prototype.insertUser = function(user) {
-    return this.db.oneOrNone('SELECT token FROM users WHERE psid=${psid}', user)
-    .then(token => {
-        if(token === null) {
-            return this.db.none("INSERT INTO users(psid, token) VALUES (${psid}, ${token});", user);
-        } else {
-            return this.db.none("UPDATE users SET token=${token} WHERE psid=${psid};", user);
-        }
-    });
-};
-
-Database.prototype.deleteUser = function(user) {
-    return this.db.none("DELETE FROM public.users WHERE psid=${psid}", user);
-};
-*/
 
 module.exports = Database;
