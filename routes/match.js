@@ -189,14 +189,15 @@ function pairUser(user_psid, next) {
 	db.getUserToken(user_psid, user_token => {
 		getUserFields(user_token.token, fields, user_data => {
 			getAllUsers(users => {
-				console.log(users);
 				max = -1;
 				maxSimiliarities = {};
 				maxUser = {psid: -1};
 				for (var user of users) {
+					console.log("USER: " + user);
 					if (user.psid == user_psid) continue;
 					getUserFields(user.token, fields, userData2 => {
 						var sim = compareUsers(user_data, userData2);
+						console.log("SIM: " + sim);
 						if (sim.similarity > max) {
 							max = sim.similarity;
 							maxSimiliarities = sim.similarities;
