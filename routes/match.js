@@ -202,8 +202,8 @@ function pairUser(user_psid, next) {
 							maxUser = user;
 						}
 					});*/
+					next(user.psid, maxSimiliarities);					
 				}		
-				next(user.psid, maxSimiliarities);
 			});
 		});
 	});
