@@ -31,7 +31,7 @@ router.post('/', function (req, res) {
 						if(match != null) {
 							sendTextMessage(match, event.message.text);
 						} else {
-							sendTextMessage(sender, "Select \"Actions\" -> \"Find match\" from menu");
+							sendTextMessage(sender, "Select \"Actions\" -> \"Find a match\" from menu");
 						}
 					});
 				}
@@ -46,15 +46,15 @@ router.post('/', function (req, res) {
 								db.setInterlogator(sender, int_psid);
 								db.setInterlogator(int_psid, sender);
 								db.setWaiting(int_psid, false);
-								sendTextMessage(int_psid, "We found you a match!");
-								sendTextMessage(sender, "We found you a match!");
+								sendTextMessage(int_psid, "We've found you a match!");
+								sendTextMessage(sender, "We've found you a match!");
 							}
 						});
 					} else if(event.postback.payload == "ABANDON") {
 						db.setWaiting(sender, false);
 						db.getInterlogtor(sender, int_psid => {
 							if(int_psid != null) {
-								sendTextMessage(int_psid, "Your match left the conversation!");
+								sendTextMessage(int_psid, "Your match has left the conversation!");
 								db.setInterlogator(int_psid, null);
 							}
 							db.setInterlogator(sender, null);
