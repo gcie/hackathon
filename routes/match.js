@@ -100,7 +100,7 @@ function compare_ages(a, b)
 
 function get_data(x)
 {
-    if(x.hasOwnProperty('data'))
+    if(x != undefined && x.hasOwnProperty('data'))
         return x.data;
     
     return x;
