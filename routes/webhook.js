@@ -43,8 +43,8 @@ router.post('/', function (req, res) {
 							if(int_psid == -1) {
 								db.setWaiting(sender, true);
 							} else {
-								db.setInterlogator(sender, int_psid);
-								db.setInterlogator(int_psid, sender);
+								db.setInterlocutor(sender, int_psid);
+								db.setInterlocutor(int_psid, sender);
 								db.setWaiting(int_psid, false);
 								sendTextMessage(int_psid, "We found you a match!");
 								sendTextMessage(sender, "We found you a match!");
@@ -52,12 +52,12 @@ router.post('/', function (req, res) {
 						});
 					} else if(event.postback.payload == "ABANDON") {
 						db.setWaiting(sender, false);
-						db.getInterlogtor(sender, int_psid => {
+						db.getInterlocutor(sender, int_psid => {
 							if(int_psid != null) {
 								sendTextMessage(int_psid, "Your match left the conversation!");
-								db.setInterlogator(int_psid, null);
+								db.setInterlocutor(int_psid, null);
 							}
-							db.setInterlogator(sender, null);
+							db.setInterlocutor(sender, null);
 						});
 					}
 				}

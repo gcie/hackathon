@@ -45,11 +45,11 @@ var Database = (function() {
             get();
             db.any("SELECT psid, token, int_psid FROM users WHERE waiting=$1;", true).then(data => next(data));
         },
-        setInterlogator: function(psid, int_psid, next) {
+        setInterlocutor: function(psid, int_psid, next) {
             get();
             db.none("UPDATE users SET int_psid=$1 WHERE psid=$2;", [int_psid, psid]).then(next);
         },
-        getInterlogator: function(psid, next) {
+        getInterlocutor: function(psid, next) {
             get();
             db.none("SELECT int_psid FROM users WHERE psid=$1;", psid).then(next);
         },
