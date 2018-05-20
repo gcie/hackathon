@@ -62,9 +62,9 @@ var Database = (function() {
             db.oneOrNone('SELECT token FROM users WHERE psid=${psid};', user)
             .then(token => {
                 if(token === null) {
-                    return db.none("INSERT INTO users(psid, token) VALUES (${psid}, ${token});", user);
+                    return db.none("INSERT INTO users(psid, token, waiting) VALUES (${psid}, ${token}, ${waiting});", user);
                 } else {
-                    return db.none("UPDATE users SET token=${token} WHERE psid=${psid};", user);
+                    return db.none("UPDATE users SET token=${token}, waiting=${waiting} WHERE psid=${psid};", user);
                 }
             }).then(next);
         },
