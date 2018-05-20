@@ -87,8 +87,8 @@ function forwardMessage(recip, in_message)
 	if("text" in in_message)
 		new_message["text"] = in_message["text"]
 
-	if("attachment" in in_message)
-		new_message["attachment"] = in_message["attachment"]
+	if("attachments" in in_message)
+		new_message["attachment"] = in_message["attachments"][0]
 
 	request({
 		url: 'https://graph.facebook.com/v3.0/me/messages',
