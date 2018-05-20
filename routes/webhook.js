@@ -25,29 +25,30 @@ router.post('/', function (req, res) {
 		console.log(sender);
 		db.checkUser(sender, found => {
 			if(found) {
-				console.log("FOUND");
 				if (event.message && event.message.text) {
-					console.log("MESSAGE");
 					db.getUserMatch(sender, match => {
 						if(match != null) {
-							console.log("SENDING TO MATCH: " + event.message.text);
 							sendTextMessage(match, event.message.text);
 						} else {
-							console.log("SENDING TO SENDER");
 							sendTextMessage(sender, "Select \"Actions\" -> \"Find match\" from menu");
 						}
 					});
 				}
 				if (event.postback) {
-					console.log("POSTBACK");
 					if(event.postback.payload == "FIND_MATCH") {
-						// TODO
+						db.setWaiting(sender, true);
 					} else if(event.postback.payload == "ABANDON") {
-						// TODO
+						db.setWaiting(sender, false);
+						db.getInterlogtor(sender, int_psid => {
+							if(int_psid != null) {
+								sendTextMessage(int_psid, "Your match left the conversation!");
+								db.setInterlogator(int_psid, null);
+							}
+							db.setInterlogator(sender, null);
+						});
 					}
 				}
 			} else {
-				console.log("LOGIN REQUEST");
 				sendLoginRequestMessage(sender);
 			}
 		});
