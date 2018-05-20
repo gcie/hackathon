@@ -39,7 +39,7 @@ router.post('/', function (req, res) {
 				if (event.postback) {
 					if(event.postback.payload == "FIND_MATCH") {
 						console.log("MATCHING");
-						match(sender, (int_psid, similarities) => {
+						match.pairUser(sender, (int_psid, similarities) => {
 							console.log("MATCHED with: " + int_psid);
 							if(int_psid == -1) {
 								sendTextMessage(sender, "We couldn't find a match right away. Please wait for a match");
