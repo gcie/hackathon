@@ -192,9 +192,8 @@ function pairUser(user_psid, next) {
 				max = -1;
 				maxSimiliarities = {};
 				maxUser = {psid: -1};
-				for (var user of users) {
-					console.log("USER: ")
-					console.log(user);
+				for(var i = 0; i < users.length; i += 1) {
+					user = users[i];
 					if (user.psid == user_psid) continue;
 					getUserFields(user.token, fields, userData2 => {
 						var sim = compareUsers(user_data, userData2);
@@ -205,10 +204,11 @@ function pairUser(user_psid, next) {
 							maxSimiliarities = sim.similarities;
 							maxUser = user;
 						}
+						if( i == users.length - 1) {
+							next(maxUser.psid, maxSimiliarities);
+						}
 					});
-				}		
-		
-				next(maxUser.psid, maxSimiliarities);
+				}
 			});
 		});
 	});
