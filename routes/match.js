@@ -197,14 +197,13 @@ function pairUser(user_psid, next) {
 					if (user.psid == user_psid) continue;
 					getUserFields(user.token, fields, userData2 => {
 						var sim = compareUsers(user_data, userData2);
-						console.log("SIM: ");
-						console.log(sim);
 						if (sim.similarity > max) {
 							max = sim.similarity;
 							maxSimiliarities = sim.similarities;
 							maxUser = user;
 						}
 						if( i == users.length - 1) {
+							console.log("FODAUSFADSFDSAAV: " + maxUser.psid);
 							next(maxUser.psid, maxSimiliarities);
 						}
 					});
