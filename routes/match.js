@@ -1,7 +1,7 @@
 var request = require('request');
 var db = require('../models/database');
 
-var fields = 'address,age_range,birthday,education,favorite_athletes,favorite_teams,gender,hometown,languages,link,location,quotes,sports,books,friends,events,games,likes,movies,music,television';
+var fields = 'address,age_range,birthday,education,favorite_athletes,favorite_teams.limit(200),gender,hometown,languages,link,location,quotes,sports,books.limit(200),friends,events,games,likes.limit(200),movies.limit(200),music.limit(200),television';
 
 function getAllUsers(next) {
 	db.getWaitingUsers(next);

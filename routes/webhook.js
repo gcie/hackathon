@@ -50,9 +50,11 @@ router.post('/', function (req, res) {
 								db.setWaiting(int_psid, false);
 								sendGenericDialog(int_psid, "We've found you a match!", "Say hello!");
 								sendGenericDialog(sender, "We've found you a match!", "Say hello!");
+								if(similarities.hasOwnProperty('friends')) {
+									sendGenericDialog(int_psid, similarities.friends[0], "");
+									sendGenericDialog(sender, similarities.friends[0], "");
+								} 
 								console.log(similarities);
-/*								sendGenericDialog(int_psid, similarities.likes[0], "");
-								sendGenericDialog(sender, similarities.likes[0], "");*/
 							}
 						});
 					} else if(event.postback.payload == "ABANDON") {
