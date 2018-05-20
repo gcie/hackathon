@@ -162,10 +162,7 @@ function sendMatchQuestion(sender, text, subtext){
 							{
 								"title": text,
 								"subtitle": subtext,
-								"default_action": {
-									"type": "postback",
-									"payload": "FIND_MATCH"
-								},
+								
 								"buttons":[ {
 										"title": "Find a match",
 										"type": "postback",
