@@ -9,7 +9,7 @@ router.get('/', function(req, res) {
     var user = User(req.query.psid, req.query.token);
     db.insertUser(user);
 
-    res.redirect(307, 'https://www.messenger.com/closeWindow/?image_url=https://i.imgur.com/ts6E8AS.jpg&display_text=Login%20successful%2C%20you%20may%20close%20this%20page.');
+    res.redirect(307, 'https://www.messenger.com/closeWindow/?image_url=https%3A%2F%2Fi.imgur.com%2Fts6E8AS.jpg&display_text=Login%20successful%2C%20you%20may%20close%20this%20page.');
 });
 
 router.post('/', function(req, res) {
