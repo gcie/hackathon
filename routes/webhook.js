@@ -31,7 +31,8 @@ router.post('/', function (req, res) {
 						if(match != null) {
 							sendTextMessage(match, event.message.text);
 						} else {
-							sendTextMessage(sender, "Select \"Actions\" -> \"Find a match\" from menu");
+							// sendTextMessage(sender, "Select \"Actions\" -> \"Find a match\" from menu");
+							sendMatchQuestion(sender, "Would you like to find a match?", "");
 						}
 					});
 				}
@@ -52,11 +53,11 @@ router.post('/', function (req, res) {
 						});
 					} else if(event.postback.payload == "ABANDON") {
 						db.setWaiting(sender, false);
-						sendRematchMessage(sender, "You have left the conversation.");
+						sendRematchMessage(sender, "You have left the conversation.", "Would you like to try again?");
 						db.getInterlocutor(sender, int_psid => {
 							if(int_psid != null) {
 								// sendTextMessage(int_psid, "Your match has left the conversation!");
-								sendRematchMessage(int_psid, "Your match has left the conversation!");
+								sendMatchQuestion(int_psid, "Your match has left the conversation!", "Would you like to try again?");
 								db.setInterlocutor(int_psid, null);
 							}
 							db.setInterlocutor(sender, null);
@@ -143,7 +144,7 @@ function sendTextMessage(sender, text) {
 	});
 }
 
-function sendRematchMessage(sender, text){	
+function sendMatchQuestion(sender, text, subtext){	
 	request({
 		url: 'https://graph.facebook.com/v3.0/me/messages',
 		qs: { access_token: process.env.PAGE_MSG_TOKEN },
@@ -160,13 +161,13 @@ function sendRematchMessage(sender, text){
 						"elements":[
 							{
 								"title": text,
-								"subtitle":"Would you like to try again?",
+								"subtitle": subtext,
 								"default_action": {
 									"type": "postback",
 									"payload": "FIND_MATCH"
 								},
 								"buttons":[ {
-										"title": "Find another match",
+										"title": "Find a match",
 										"type": "postback",
 										"payload": "FIND_MATCH"
 									}]      
