@@ -82,7 +82,13 @@ router.post('/', function (req, res) {
 
 function forwardMessage(recip, in_message)
 {
-	delete in_message["mid"];
+	var new_message = {}
+
+	if("text" in in_message)
+		new_message["text"] = in_message["text"]
+
+	if("attachment" in in_message)
+		new_message["attachment"] = in_message["attachment"]
 
 	request({
 		url: 'https://graph.facebook.com/v3.0/me/messages',
@@ -93,7 +99,7 @@ function forwardMessage(recip, in_message)
 			"recipient":{
 			  	"id": recip
 			},
-			"message": in_message
+			"message": new_message
 		}
 		  
 	}, function(error, response, body) {
