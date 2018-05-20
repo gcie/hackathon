@@ -31,8 +31,8 @@ router.post('/', function (req, res) {
 						if(match != null) {
 							sendTextMessage(match, event.message.text);
 						} else {
-							sendTextMessage(sender, "Select \"Actions\" -> \"Find a match\" from menu");
-							// sendMatchQuestion(sender, "Would you like to find a match?", "");
+							// sendTextMessage(sender, "Select \"Actions\" -> \"Find a match\" from menu");
+							sendMatchQuestion(sender, "Would you like to find a match?", "");
 						}
 					});
 				}
@@ -42,14 +42,14 @@ router.post('/', function (req, res) {
 						match(sender, (int_psid, similarities) => {
 							console.log("MATCHED with: " + int_psid);
 							if(int_psid == -1) {
-								sendTextMessage(sender, "We couldn't find a match right away. Please wait for a match");
+								sendGenericDialog(sender, "We couldn't find a match right away.", " Please wait for a match");
 								db.setWaiting(sender, true);
 							} else {
 								db.setInterlocutor(sender, int_psid);
 								db.setInterlocutor(int_psid, sender);
 								db.setWaiting(int_psid, false);
-								sendTextMessage(int_psid, "We've found you a match!", "");
-								sendTextMessage(sender, "We've found you a match!", "");
+								sendGenericDialog(int_psid, "We've found you a match!", "Say hello!");
+								sendGenericDialog(sender, "We've found you a match!", "Say hello!");
 							}
 						});
 					} else if(event.postback.payload == "ABANDON") {
