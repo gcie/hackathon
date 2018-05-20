@@ -42,7 +42,7 @@ router.post('/', function (req, res) {
 						match(sender, (int_psid, similarities) => {
 							console.log("MATCHED with: " + int_psid);
 							if(int_psid == -1) {
-								//sendGenericDialog(sender, "We couldn't find a match right away.", "Please wait for a match");
+								sendTextMessage(sender, "We couldn't find a match right away. Please wait for a match");
 								db.setWaiting(sender, true);
 							} else {
 								db.setInterlocutor(sender, int_psid);
