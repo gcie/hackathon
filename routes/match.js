@@ -210,7 +210,7 @@ function pairUser(user_psid, next) {
 					}));
 				}
 				Promise.all(user_promises).then(() => {
-					next(user.psid, maxSimiliarities);
+					next(maxUser.psid, maxSimiliarities);
 				});	
 			});
 		});
