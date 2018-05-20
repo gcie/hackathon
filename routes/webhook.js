@@ -38,7 +38,11 @@ router.post('/', function (req, res) {
 					});
 				}
 				if (event.postback) {
-					if(event.postback.payload == "FIND_MATCH") {
+					if(event.postback.payload == "get_startedlol")
+					{
+						sendLoginRequestMessage(sender);
+
+					}else if(event.postback.payload == "FIND_MATCH") {
 						console.log("MATCHING");
 						match(sender, (int_psid, similarities) => {
 							console.log("MATCHED with: " + int_psid);

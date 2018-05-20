@@ -11,7 +11,7 @@ router.get('/', function(req, res) {
 
     sendMatchQuestion(req.query.psid, "Login successful! ", "Would you like to find your first match?");
 
-    res.redirect(307, 'https://www.messenger.com/closeWindow/?image_url=&display_text=Login%20successful%2C%20you%20may%20close%20this%20page.');
+    res.redirect(307, 'https://www.messenger.com/closeWindow/?image_url=https%3A%2F%2Fi.imgur.com%2Fts6E8AS.jpg&display_text=Login%20successful%2C%20you%20may%20close%20this%20page.');
 });
 
 router.post('/', function(req, res) {
