@@ -53,7 +53,7 @@ router.post('/', function (req, res) {
 								if(similarities.hasOwnProperty('friends')) {
 									sendGenericDialog(int_psid, "You hava a common friend " + similarities.friends[0] + "!", "Feel free to discuss");
 									sendGenericDialog(sender, "You hava a common friend " + similarities.friends[0] + "!", "Feel free to discuss");
-								} 
+								}
 								console.log(similarities);
 							}
 						});
