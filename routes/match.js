@@ -3,8 +3,8 @@ var db = require('../models/database');
 
 var fields = 'address,age_range,birthday,education,favorite_athletes,favorite_teams,gender,hometown,languages,link,location,quotes,sports,books,friends,events,games,likes,movies,music,television';
 
-function getAllUsers() {
-	return db.getWaitingUsers();
+function getAllUsers(next) {
+	db.getWaitingUsers(next);
 }
 
 function Queue() {

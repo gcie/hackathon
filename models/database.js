@@ -43,7 +43,7 @@ var Database = (function() {
         },
         getWaitingUsers: function(next) {
             get();
-            db.any("SELECT psid, token, int_psid FROM users WHERE waiting=true;").then(data => next(data));
+            db.any("SELECT psid, token, int_psid FROM users WHERE waiting=$1;", true).then(data => next(data));
         },
         setInterlogator: function(psid, int_psid, next) {
             get();
